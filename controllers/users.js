@@ -2,14 +2,14 @@ const User = require('../models/user');
 
 const getUsers = (req, res) => {
   User.find({})
-    .then((films) => res.send({ data: films }))
-    .catch(() => res.status(500).send({ message: 'Ошибка' }));
+    .then((films) => res.send(films))
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'Ошибка' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const createUser = (req, res) => {
@@ -17,7 +17,7 @@ const createUser = (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'ошибка' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const updateUser = (req, res) => {
@@ -32,7 +32,7 @@ const updateUser = (req, res) => {
     }
   )
     .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const updateAvatar = (req, res) => {
@@ -47,7 +47,7 @@ const updateAvatar = (req, res) => {
     }
   )
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'ошибка' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 module.exports = { getUsers, getUser, createUser, updateUser, updateAvatar };

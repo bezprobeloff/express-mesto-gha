@@ -3,7 +3,7 @@ const Card = require('../models/card');
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch(() => res.status(500).send({ message: 'Ошибка' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const createCard = (req, res) => {
@@ -13,13 +13,13 @@ const createCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const likeCard = (req, res) => {
@@ -31,7 +31,7 @@ const likeCard = (req, res) => {
     { new: true }
   )
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const dislikeCard = (req, res) => {
@@ -43,7 +43,7 @@ const dislikeCard = (req, res) => {
     { new: true }
   )
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };

@@ -13,13 +13,32 @@ const createCard = (req, res) => {
 
   Card.create({ name, link, owner })
     .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({
+          message: 'Переданы некорректные данные при создании карточки.',
+        });
+      }
+      return res.status(500).send({ message: err.message });
+    });
 };
 
 const deleteCard = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((card) => {
+      if (!card) {
+        return res
+          .status(404)
+          .send({ message: 'Карточка с указанным id не найдена.' });
+      }
+      return res.send(card);
+    })
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        return res.status(400).send({ message: 'Некорректный формат id.' });
+      }
+      return res.status(500).send({ message: err.message });
+    });
 };
 
 const likeCard = (req, res) => {
@@ -28,10 +47,27 @@ const likeCard = (req, res) => {
     {
       $addToSet: { likes: req.user._id },
     },
-    { new: true }
+    { new: true, runValidators: true }
   )
-    .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((card) => {
+      if (!card) {
+        return res
+          .status(404)
+          .send({ message: 'Передан несуществующий id карточки' });
+      }
+      return res.send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({
+          message: 'Переданы некорректные данные для постановки/снятии лайка.',
+        });
+      }
+      if (err.kind === 'ObjectId') {
+        return res.status(400).send({ message: 'Некорректный формат id.' });
+      }
+      return res.status(500).send({ message: err.message });
+    });
 };
 
 const dislikeCard = (req, res) => {
@@ -40,10 +76,27 @@ const dislikeCard = (req, res) => {
     {
       $pull: { likes: req.user._id },
     },
-    { new: true }
+    { new: true, runValidators: true }
   )
-    .then((card) => res.send(card))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .then((card) => {
+      if (!card) {
+        return res
+          .status(404)
+          .send({ message: 'Передан несуществующий id карточки' });
+      }
+      return res.send(card);
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({
+          message: 'Переданы некорректные данные для постановки/снятии лайка.',
+        });
+      }
+      if (err.kind === 'ObjectId') {
+        return res.status(400).send({ message: 'Некорректный формат id.' });
+      }
+      return res.status(500).send({ message: err.message });
+    });
 };
 
 module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };

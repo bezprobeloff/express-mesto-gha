@@ -48,7 +48,7 @@ const updateUser = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       if (!user) {
@@ -78,7 +78,7 @@ const updateAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-    }
+    },
   )
     .then((user) => {
       if (!user) {
@@ -99,4 +99,6 @@ const updateAvatar = (req, res) => {
     });
 };
 
-module.exports = { getUsers, getUser, createUser, updateUser, updateAvatar };
+module.exports = {
+  getUsers, getUser, createUser, updateUser, updateAvatar,
+};

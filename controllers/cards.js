@@ -47,7 +47,7 @@ const likeCard = (req, res) => {
     {
       $addToSet: { likes: req.user._id },
     },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((card) => {
       if (!card) {
@@ -76,7 +76,7 @@ const dislikeCard = (req, res) => {
     {
       $pull: { likes: req.user._id },
     },
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   )
     .then((card) => {
       if (!card) {
@@ -99,4 +99,6 @@ const dislikeCard = (req, res) => {
     });
 };
 
-module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };
+module.exports = {
+  getCards, createCard, deleteCard, likeCard, dislikeCard,
+};

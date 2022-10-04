@@ -7,6 +7,7 @@ const app = express();
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
 const { login, createUser } = require('./controllers/users');
+const { auth } = require('./middlewares/auth');
 
 app.use((req, res, next) => {
   req.user = {
@@ -22,9 +23,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {});
 
 app.post('/signin', login);
 app.post('/signup', createUser);
-app.use('/users', userRouter);
-app.use('/cards', cardRouter);
-app.use('*', (req, res) => {
+app.use('/users', auth, userRouter);
+app.use('/cards', auth, cardRouter);
+app.use('*', auth, (req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 

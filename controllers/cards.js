@@ -7,7 +7,6 @@ const getCards = (req, res) => {
 };
 
 const createCard = (req, res) => {
-  // временное решение вставки id пользователя
   const owner = req.user._id;
   const { name, link } = req.body;
 

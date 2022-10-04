@@ -9,13 +9,6 @@ const cardRouter = require('./routes/card');
 const { login, createUser } = require('./controllers/users');
 const { auth } = require('./middlewares/auth');
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '6331448b2410b6017d8255eb',
-  };
-
-  next();
-});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

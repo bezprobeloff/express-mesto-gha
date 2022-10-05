@@ -26,7 +26,7 @@ const getUsers = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  User.findById(req.params.userId)
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         return res
@@ -49,11 +49,20 @@ const createUser = (req, res) => {
   } = req.body;
 
   bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
-    }))
-    .then((user) => res.send(user))
+    .then((hash) => User.create(
+      {
+        name, about, avatar, email, password: hash,
+      },
+    ))
+    .then((user) => {
+      res.send(user);
+    })
     .catch((err) => {
+      if (err.code === 11000) {
+        return res.status(400).send({
+          message: `Пользователь с email '${email}' уже существует.`,
+        });
+      }
       if (err.name === 'ValidationError') {
         return res.status(400).send({
           message: 'Переданы некорректные данные при создании пользователя.',

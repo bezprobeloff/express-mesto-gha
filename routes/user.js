@@ -13,8 +13,8 @@ router.get('/me', getUser);
 
 router.get('/:userId', celebrates.getUser, getUser);
 
-router.patch('/me', updateUser);
+router.patch('/me', celebrates.updateUser, updateUser);
 
-router.patch('/me/avatar', updateAvatar);
+router.patch('/me/avatar', celebrates.updateAvatar, updateAvatar);
 
 module.exports = router;

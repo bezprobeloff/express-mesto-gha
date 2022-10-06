@@ -19,4 +19,19 @@ const getUser = celebrate({
   }),
 });
 
-module.exports = { login, getUser };
+const updateUser = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+  }),
+});
+
+const updateAvatar = celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().regex(regexAvatarLink),
+  }),
+});
+
+module.exports = {
+  login, getUser, updateUser, updateAvatar,
+};

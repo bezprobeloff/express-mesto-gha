@@ -39,6 +39,12 @@ const createCard = celebrate({
   }),
 });
 
+const checkIdCard = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.objectId(),
+  }),
+});
+
 module.exports = {
-  login, getUser, updateUser, updateAvatar, createCard,
+  login, getUser, updateUser, updateAvatar, createCard, checkIdCard,
 };

@@ -10,6 +10,8 @@ router.get('/', getUsers);
 
 router.get('/me', getUser);
 
+router.get('/:userId', getUser);
+
 router.patch('/me', updateUser);
 
 router.patch('/me/avatar', updateAvatar);

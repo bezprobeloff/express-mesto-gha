@@ -1,12 +1,15 @@
 const Card = require('../models/card');
+const ValidationError = require('../errors/ValidationError');
+const NotFoundError = require('../errors/NotFoundError');
+const BadRequestError = require('../errors/BadRequestError');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send(cards))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const owner = req.user._id;
   const { name, link } = req.body;
 
@@ -14,33 +17,33 @@ const createCard = (req, res) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({
-          message: 'Переданы некорректные данные при создании карточки.',
-        });
+        next(new ValidationError(
+          'Переданы некорректные данные при создании карточки.',
+        ));
       }
-      return res.status(500).send({ message: err.message });
+      next(err);
     });
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        return res
-          .status(404)
-          .send({ message: 'Карточка с указанным id не найдена.' });
+        next(new NotFoundError(
+          'Карточка с указанным id не найдена.',
+        ));
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        return res.status(400).send({ message: 'Некорректный формат id.' });
+        next(new BadRequestError('Некорректный формат id.'));
       }
-      return res.status(500).send({ message: err.message });
+      next(err);
     });
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     {
@@ -50,26 +53,26 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res
-          .status(404)
-          .send({ message: 'Передан несуществующий id карточки' });
+        next(new NotFoundError(
+          'Передан несуществующий id карточки',
+        ));
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({
-          message: 'Переданы некорректные данные для постановки/снятии лайка.',
-        });
+        next(new ValidationError(
+          'Переданы некорректные данные для постановки/снятии лайка.',
+        ));
+      } else if (err.kind === 'ObjectId') {
+        next(new BadRequestError('Некорректный формат id.'));
+      } else {
+        next(err);
       }
-      if (err.kind === 'ObjectId') {
-        return res.status(400).send({ message: 'Некорректный формат id.' });
-      }
-      return res.status(500).send({ message: err.message });
     });
 };
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     {
@@ -79,22 +82,22 @@ const dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        return res
-          .status(404)
-          .send({ message: 'Передан несуществующий id карточки' });
+        next(new NotFoundError(
+          'Передан несуществующий id карточки',
+        ));
       }
       return res.send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({
-          message: 'Переданы некорректные данные для постановки/снятии лайка.',
-        });
+        next(new ValidationError(
+          'Переданы некорректные данные для постановки/снятии лайка.',
+        ));
+      } else if (err.kind === 'ObjectId') {
+        next(new BadRequestError('Некорректный формат id.'));
+      } else {
+        next(err);
       }
-      if (err.kind === 'ObjectId') {
-        return res.status(400).send({ message: 'Некорректный формат id.' });
-      }
-      return res.status(500).send({ message: err.message });
     });
 };
 

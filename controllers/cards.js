@@ -28,24 +28,29 @@ const createCard = (req, res, next) => {
 
 const deleteCard = (req, res, next) => {
   const owner = req.user._id;
-  Card.findByIdAndRemove(req.params.cardId)
+
+  // сначала проверим наличие карточки и прав на удаление
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         throw new NotFoundError(
           'Карточка с указанным id не найдена.',
         );
-      }
-      if (card.owner !== owner) {
+      } else if (card.owner !== owner) {
         throw new ForbiddenError('Отсутствие прав на удаление карточки.');
       }
-      return res.send(card);
+
+      // уже можно удалить карточку
+      Card.findByIdAndRemove(req.params.cardId)
+        .then((deletedCard) => res.send(deletedCard))
+        .catch((err) => {
+          if (err.kind === 'ObjectId') {
+            next(new BadRequestError('Некорректный формат id.'));
+          }
+          next(err);
+        });
     })
-    .catch((err) => {
-      if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректный формат id.'));
-      }
-      next(err);
-    });
+    .catch(next);
 };
 
 const likeCard = (req, res, next) => {

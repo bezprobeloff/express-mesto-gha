@@ -6,10 +6,11 @@ const {
   likeCard,
   dislikeCard,
 } = require('../controllers/cards');
+const celebrates = require('../middlewares/celebrates');
 
 router.get('/', getCards);
 
-router.post('/', createCard);
+router.post('/', celebrates.createCard, createCard);
 
 router.delete('/:cardId', deleteCard);
 

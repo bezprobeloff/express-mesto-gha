@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 Joi.objectId = require('joi-objectid')(Joi);
-const { regexAvatarLink } = require('../utils/constants');
+const { regexImageLink } = require('../utils/constants');
 
 // его можно использовать и для создания юзера
 const login = celebrate({
@@ -9,7 +9,7 @@ const login = celebrate({
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(regexAvatarLink),
+    avatar: Joi.string().regex(regexImageLink),
   }).unknown(true),
 });
 
@@ -28,10 +28,17 @@ const updateUser = celebrate({
 
 const updateAvatar = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().regex(regexAvatarLink),
+    avatar: Joi.string().regex(regexImageLink),
+  }),
+});
+
+const createCard = celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().required().min(2).max(30),
+    link: Joi.string().required().regex(regexImageLink),
   }),
 });
 
 module.exports = {
-  login, getUser, updateUser, updateAvatar,
+  login, getUser, updateUser, updateAvatar, createCard,
 };

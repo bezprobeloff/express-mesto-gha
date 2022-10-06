@@ -1,4 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
+Joi.objectId = require('joi-objectid')(Joi);
 const { regexAvatarLink } = require('../utils/constants');
 
 // его можно использовать и для создания юзера
@@ -12,4 +13,10 @@ const login = celebrate({
   }).unknown(true),
 });
 
-module.exports = { login };
+const getUser = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.objectId(),
+  }),
+});
+
+module.exports = { login, getUser };

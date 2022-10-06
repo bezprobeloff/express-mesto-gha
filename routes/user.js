@@ -5,12 +5,13 @@ const {
   updateUser,
   updateAvatar,
 } = require('../controllers/users');
+const celebrates = require('../middlewares/celebrates');
 
 router.get('/', getUsers);
 
 router.get('/me', getUser);
 
-router.get('/:userId', getUser);
+router.get('/:userId', celebrates.getUser, getUser);
 
 router.patch('/me', updateUser);
 

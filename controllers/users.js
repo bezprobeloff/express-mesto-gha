@@ -51,30 +51,26 @@ const createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  // делаем сначала проверку на наличия пользователя
-  User.find({ email })
-    .then((checkUser) => {
-      if (checkUser.length > 0) {
-        throw new ConflictError(
-          `Пользователь с email '${email}' уже существует.`,
-        );
-      }
-      bcrypt.hash(password, 10)
-        .then((hash) => User.create(
-          {
-            name, about, avatar, email, password: hash,
-          },
-        ))
-        .then((user) => {
-          res.send(user);
-        })
-        .catch((err) => {
-          if (err.name === 'ValidationError') {
-            next(new ValidationError('Переданы некорректные данные при создании пользователя.'));
-          }
-        });
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create(
+      {
+        name, about, avatar, email, password: hash,
+      },
+    ))
+    .then((user) => {
+      res.send(user);
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.code === 11000) {
+        next(new ConflictError(
+          `Пользователь с email '${email}' уже существует.`,
+        ));
+      } else if (err.name === 'ValidationError') {
+        next(new ValidationError('Переданы некорректные данные при создании пользователя.'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const updateUser = (req, res, next) => {

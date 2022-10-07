@@ -5,7 +5,6 @@ const ConflictError = require('../errors/ConflictError');
 const ValidationError = require('../errors/ValidationError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 const NotFoundError = require('../errors/NotFoundError');
-const BadRequestError = require('../errors/BadRequestError');
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -41,9 +40,10 @@ const getUser = (req, res, next) => {
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректный формат id.'));
+        next(new ValidationError('Некорректный формат id.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -97,6 +97,8 @@ const updateUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении профиля.'));
+      } else {
+        next(err);
       }
     });
 };
@@ -124,8 +126,9 @@ const updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new ValidationError('Переданы некорректные данные при обновлении аватара.'));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 

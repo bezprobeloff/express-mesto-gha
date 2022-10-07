@@ -8,6 +8,7 @@ const app = express();
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
 const { login, createUser } = require('./controllers/users');
+const notFoundController = require('./controllers/notFoundController');
 const { auth } = require('./middlewares/auth');
 const celebrates = require('./middlewares/celebrates');
 
@@ -20,9 +21,7 @@ app.post('/signin', celebrates.login, login);
 app.post('/signup', celebrates.login, createUser);
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
-app.use('*', auth, (req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
-});
+app.use('*', auth, notFoundController);
 
 app.use(errors());
 

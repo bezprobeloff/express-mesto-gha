@@ -1,7 +1,6 @@
 const Card = require('../models/card');
 const ValidationError = require('../errors/ValidationError');
 const NotFoundError = require('../errors/NotFoundError');
-const BadRequestError = require('../errors/BadRequestError');
 const ForbiddenError = require('../errors/ForbiddenError');
 
 const getCards = (req, res, next) => {
@@ -21,8 +20,9 @@ const createCard = (req, res, next) => {
         next(new ValidationError(
           'Переданы некорректные данные при создании карточки.',
         ));
+      } else {
+        next(err);
       }
-      next(err);
     });
 };
 
@@ -36,21 +36,22 @@ const deleteCard = (req, res, next) => {
         throw new NotFoundError(
           'Карточка с указанным id не найдена.',
         );
-      } else if (card.owner.toString() !== owner) {
+      }
+      if (card.owner.toString() !== owner) {
         throw new ForbiddenError('Отсутствие прав на удаление карточки.');
       }
 
       // уже можно удалить карточку
-      Card.findByIdAndRemove(req.params.cardId)
-        .then((deletedCard) => res.send(deletedCard))
-        .catch((err) => {
-          if (err.kind === 'ObjectId') {
-            next(new BadRequestError('Некорректный формат id.'));
-          }
-          next(err);
-        });
+      return Card.findByIdAndRemove(req.params.cardId);
     })
-    .catch(next);
+    .then((deletedCard) => res.send(deletedCard))
+    .catch((err) => {
+      if (err.kind === 'ObjectId') {
+        next(new ValidationError('Некорректный формат id.'));
+      } else {
+        next(err);
+      }
+    });
 };
 
 const likeCard = (req, res, next) => {
@@ -75,7 +76,7 @@ const likeCard = (req, res, next) => {
           'Переданы некорректные данные для постановки/снятии лайка.',
         ));
       } else if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректный формат id.'));
+        next(new ValidationError('Некорректный формат id.'));
       } else {
         next(err);
       }
@@ -104,7 +105,7 @@ const dislikeCard = (req, res, next) => {
           'Переданы некорректные данные для постановки/снятии лайка.',
         ));
       } else if (err.kind === 'ObjectId') {
-        next(new BadRequestError('Некорректный формат id.'));
+        next(new ValidationError('Некорректный формат id.'));
       } else {
         next(err);
       }

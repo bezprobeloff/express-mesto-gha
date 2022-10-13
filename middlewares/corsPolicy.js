@@ -1,10 +1,4 @@
-// Массив доменов, с которых разрешены кросс-доменные запросы
-const allowedCors = [
-  'https://mesto.bezprobeloff.nomoredomains.icu',
-  'http://mesto.bezprobeloff.nomoredomains.icu',
-  'localhost:3000',
-];
-const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+const { allowedCors, DEFAULT_ALLOWED_METHODS } = require('../utils/constants');
 
 // eslint-disable-next-line consistent-return
 const corsPolicy = (req, res, next) => {

@@ -7,6 +7,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
+const { PATH_MESTODB } = require('./utils/constants');
 const { login, createUser } = require('./controllers/users');
 const notFoundController = require('./controllers/notFoundController');
 const { auth } = require('./middlewares/auth');
@@ -17,7 +18,7 @@ const { corsPolicy } = require('./middlewares/corsPolicy');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-mongoose.connect('mongodb://localhost:27017/mestodb', {});
+mongoose.connect(PATH_MESTODB, {});
 
 app.use(requestLogger);
 

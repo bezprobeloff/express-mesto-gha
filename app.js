@@ -11,17 +11,22 @@ const { login, createUser } = require('./controllers/users');
 const notFoundController = require('./controllers/notFoundController');
 const { auth } = require('./middlewares/auth');
 const celebrates = require('./middlewares/celebrates');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {});
 
+app.use(requestLogger);
+
 app.post('/signin', celebrates.login, login);
 app.post('/signup', celebrates.login, createUser);
 app.use('/users', auth, userRouter);
 app.use('/cards', auth, cardRouter);
 app.use('*', auth, notFoundController);
+
+app.use(errorLogger);
 
 app.use(errors());
 

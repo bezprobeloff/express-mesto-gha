@@ -12,6 +12,7 @@ const notFoundController = require('./controllers/notFoundController');
 const { auth } = require('./middlewares/auth');
 const celebrates = require('./middlewares/celebrates');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { corsPolicy } = require('./middlewares/corsPolicy');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,6 +21,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {});
 
 app.use(requestLogger);
 
+app.use(corsPolicy);
 app.post('/signin', celebrates.login, login);
 app.post('/signup', celebrates.login, createUser);
 app.use('/users', auth, userRouter);

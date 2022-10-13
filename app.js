@@ -7,7 +7,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const userRouter = require('./routes/user');
 const cardRouter = require('./routes/card');
-const { PATH_MESTODB } = require('./utils/constants');
+const { PATH_MESTODB, PATH_FRONTEND } = require('./utils/constants');
 const { login, createUser } = require('./controllers/users');
 const notFoundController = require('./controllers/notFoundController');
 const { auth } = require('./middlewares/auth');
@@ -22,6 +22,7 @@ mongoose.connect(PATH_MESTODB, {});
 
 app.use(requestLogger);
 
+app.use(express.static(PATH_FRONTEND));
 app.use(corsPolicy);
 app.post('/signin', celebrates.login, login);
 app.post('/signup', celebrates.login, createUser);

@@ -9,7 +9,6 @@ const allowedCors = [
   'localhost:3000',
 ];
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-// const PATH_MESTODB = 'mongodb://api.mesto.bezprobeloff.nomoredomains.icu/mestodb';
 const PATH_MESTODB = 'mongodb://localhost:27017/mestodb';
 const PATH_FRONTEND = path.join(__dirname, '../../frontend');
 

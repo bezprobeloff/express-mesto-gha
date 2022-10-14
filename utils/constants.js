@@ -6,7 +6,8 @@ const regexLink = /^https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\\/~+#-]*
 const allowedCors = [
   'https://mesto.bezprobeloff.nomoredomains.icu',
   'http://api.mesto.bezprobeloff.nomoredomains.icu',
-  'localhost:3000',
+  'https://localhost:3000',
+  'http://localhost:3000',
 ];
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 const PATH_MESTODB = 'mongodb://localhost:27017/mestodb';

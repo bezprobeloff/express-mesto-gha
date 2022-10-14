@@ -25,6 +25,14 @@ app.use(requestLogger);
 
 app.use(express.static(PATH_FRONTEND));
 app.use(corsPolicy);
+
+// Удалить после сдачи проекта
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+//
 app.post('/signin', celebrates.login, login);
 app.post('/signup', celebrates.login, createUser);
 app.use('/users', auth, userRouter);

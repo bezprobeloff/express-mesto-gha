@@ -9,6 +9,7 @@ const app = express();
 const { PATH_MESTODB, PATH_FRONTEND } = require('./utils/constants');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { corsPolicy } = require('./middlewares/corsPolicy');
+const centralError = require('./middlewares/centralError');
 const routes = require('./routes');
 
 app.use(bodyParser.json());
@@ -29,18 +30,12 @@ app.get('/crash-test', () => {
 });
 //
 app.use(routes);
-
+// пишем в лог ошибки
 app.use(errorLogger);
-
+// обработка ошибок celebrate
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  if (!err.statusCode) {
-    res.status(500).send({ message: err.message });
-  }
-  res.status(err.statusCode).send({ message: err.message });
-  next();
-});
+// обрабатываем централизованно ошибки
+app.use(centralError);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

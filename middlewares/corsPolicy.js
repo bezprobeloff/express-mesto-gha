@@ -1,6 +1,5 @@
 const { allowedCors, DEFAULT_ALLOWED_METHODS } = require('../utils/constants');
 
-// eslint-disable-next-line consistent-return
 const corsPolicy = (req, res, next) => {
   const { origin } = req.headers; // Сохраняем источник запроса в переменную origin
   const { method } = req;
@@ -17,7 +16,7 @@ const corsPolicy = (req, res, next) => {
     return res.end();
   }
 
-  next();
+  return next();
 };
 
 module.exports = { corsPolicy };

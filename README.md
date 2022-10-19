@@ -1,5 +1,6 @@
 <h1 align="center">Проект бекенд Mesto Russia (Express)</h1>
 <p align="center">
+    <img alt="Version" src="https://img.shields.io/github/package-json/v/bezprobeloff/express-mesto-gha" />
     <img alt="Quality" src="https://img.shields.io/badge/status-release-orange.svg" >
     <img alt="Made by: Bezprobeloff" src="https://img.shields.io/badge/made%20by-Bezprobeloff-blue" />
     <img alt="Made by: Bezprobeloff" src="https://github.com/bezprobeloff/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg" />

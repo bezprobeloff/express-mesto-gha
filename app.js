@@ -22,13 +22,6 @@ app.use(requestLogger);
 app.use(express.static(PATH_FRONTEND));
 app.use(corsPolicy);
 
-// Удалить после сдачи проекта
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
-//
 app.use(routes);
 // пишем в лог ошибки
 app.use(errorLogger);
